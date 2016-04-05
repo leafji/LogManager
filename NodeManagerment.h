@@ -19,14 +19,16 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "CSVParse.h"
 using namespace std;
-
 class NodeManagerment
 {
 public:
     NodeManagerment(){}
     ~NodeManagerment(){}
-    void ParseNodeToMap(const CSVParseLine CSVPl);
+    void GroupNodeByYearMonth(CSVParseLine NodeComma);
+    map<string,vector<string>> GroupNodeByDay(vector<CSVParseComma> CSVPC);
+    void ShowNodeMapByYearMonthDay(void);
 public:
-    map<string,vector<string>> NodeMap;
+    map<string,vector<CSVParseComma>> NodeMapByYearMonth;
 };

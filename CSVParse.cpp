@@ -102,7 +102,6 @@ void CSVParseLine::GroupNodeLine(void)
            NodeMap[(*iter).YearNode].push_back((*iter).content);
        }
    }
-//   NodeMap.insert(make_pair(YearMonth ,LogMessage));
 }
 
 void CSVParseLine::ShowNodeMap(void)

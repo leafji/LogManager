@@ -15,6 +15,10 @@
  *
  * =====================================================================================
  */
+#ifndef CSVPARSE_H_
+#define CSVPARSE_H_
+#endif
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -74,6 +78,7 @@ public:
     void PrintAllLine(void);
     void GroupNodeLine(void);
     void ShowNodeMap(void);
+    vector<CSVParseComma> getNodeComma(void){return NodeComma;}
 private:
     vector<CSVParseComma> NodeComma;
     map<string,vector<string> > NodeMap;

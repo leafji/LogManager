@@ -17,7 +17,7 @@
  */
 #include <stdlib.h>
 #include <iostream>
-#include "CSVParse.h"
+//#include "CSVParse.h"
 #include "NodeManagerment.h"
 using namespace std;
 
@@ -27,8 +27,9 @@ int main(int argc, char* argv[])
     csv.Load("log.csv");
     csv.ParseString();
     csv.FillNodeForComma();
-    csv.GroupNodeLine();
-    csv.ShowNodeMap();
+    NodeManagerment nmgnt;
+    nmgnt.GroupNodeByYearMonth(csv);
+    nmgnt.ShowNodeMapByYearMonthDay();
     return 0;
 
 }
