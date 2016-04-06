@@ -3,14 +3,14 @@
  *
  *       Filename:  NodeManagerment.h
  *
- *    Description:  CSV Node文件的管理类
+ *    Description:  节点管理类[用于节点按日期和年月分类，并显示]
  *
  *        Version:  1.0
  *        Created:  30/03/16 08:58:01
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  YOUR NAME (), 
+ *         Author:  leafji 
  *   Organization:  
  *
  * =====================================================================================
@@ -23,8 +23,7 @@
 using namespace std;
 class NodeManagerment
 {
-public:
-    NodeManagerment(){}
+public: NodeManagerment(){}
     ~NodeManagerment(){}
     void GroupNodeByYearMonth(CSVParseLine NodeComma);
     map<string,vector<string>> GroupNodeByDay(vector<CSVParseComma> CSVPC);

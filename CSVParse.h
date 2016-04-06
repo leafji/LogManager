@@ -9,16 +9,13 @@
  *        Created:  29/03/16 09:51:29
  *       Revision:  none
  *       Compiler:  gcc
- *
- *         Author:  YOUR NAME (), 
+ *         Author:  leafji 
  *   Organization:  
  *
  * =====================================================================================
  */
-#ifndef CSVPARSE_H_
-#define CSVPARSE_H_
-#endif
-
+#ifndef _CSVPARSE_H_
+#define _CSVPARSE_H_
 #include <iostream>
 #include <string>
 #include <vector>
@@ -39,7 +36,6 @@ class CSVParse
 {
 public:
     CSVParse(){
-        cout<<"CSVParse init enter"<<endl;
         separate = "\n";
         content =  "";
     }
@@ -50,12 +46,13 @@ public:
     }
     ~CSVParse(){}
     void Load(const string& filepathname);
+    bool IsValid(const string& filepathname);
     void ParseString(void);
     void PrintNode(void);
 public:
-    string separate;
-    string content;
-    vector<string> Node;
+    string separate; // 代表分隔符变量
+    string content; // 被解析的string变量
+    vector<string> Node;  //被切分后的节点容器
 };
 
 class CSVParseComma : public CSVParse
@@ -64,7 +61,10 @@ public:
     CSVParseComma(const string sep, const string cnt):CSVParse(sep,cnt){}
     void FillNodeForNodeInfo(void);
     void PrintAllNodeInfo(void);
-public:
+    string getYearNode(void){return YearNode;}
+    string getDateNode(void){return DateNode;}
+    vector<NodeInfo> getInfoNode(void){return infoNode;}
+private:
     vector<NodeInfo> infoNode;
     string YearNode;
     string DateNode;
@@ -76,12 +76,11 @@ class CSVParseLine:public CSVParse
 public:
     void FillNodeForComma(void);
     void PrintAllLine(void);
-    void GroupNodeLine(void);
-    void ShowNodeMap(void);
     vector<CSVParseComma> getNodeComma(void){return NodeComma;}
 private:
     vector<CSVParseComma> NodeComma;
     map<string,vector<string> > NodeMap;
 };
+#endif
 
 

@@ -9,8 +9,7 @@
  *        Created:  29/03/16 13:26:04
  *       Revision:  none
  *       Compiler:  gcc
- *
- *         Author:  YOUR NAME (), 
+ *         Author:  leafji
  *   Organization:  
  *
  * =====================================================================================
@@ -18,37 +17,62 @@
 #include <stdlib.h>
 #include "CSVParse.h"
 #include <fstream>
+/*
+ * IsValid:判断filepathname是否为csv文件。
+ */
+bool CSVParse::IsValid(const string& filepathname)
+{
+    return 1;
+}
 /* 
  * Load 读取filepathname的csv 文件，将流转入content中
- * */
+ * 
+ */
 
 void CSVParse::Load(const string& filepathname)
 {
     ifstream csv_file;
     int length;
     char* buffer;
-    csv_file.open(filepathname,ios::in);
-    if(!csv_file)
+    if(IsValid(filepathname))
     {
-        cout<< "Open CSV file failed!!" << endl;
+        csv_file.open(filepathname,ios::in);
+        if(!csv_file )
+        {
+            cout<< "Open CSV file failed!!" << endl;
+            exit(-1);
+        }
+        csv_file.seekg(0,std::ios::end);
+        length = csv_file.tellg();
+        csv_file.seekg(0,std::ios::beg);
+        buffer = new char[length];
+        csv_file.read(buffer,length);
+        content = string(buffer);
+        if(!content.length())
+        {
+            cout<<"csv file is empty!!" <<endl;
+            exit(-1);
+        }
+        delete buffer;
+        csv_file.close();   
+    }
+    else
+    {
+        cout<<"Not a regular CSV file, exit!!"<<endl;
         exit(-1);
     }
-    csv_file.seekg(0,std::ios::end);
-    length = csv_file.tellg();
-    csv_file.seekg(0,std::ios::beg);
-    buffer = new char[length];
-    csv_file.read(buffer,length);
-    content = string(buffer);
-    delete buffer;
-    csv_file.close();
+    
 }
 
+/* 
+ * ParseString: 根据separate 将content进行切分
+ * 保存到 vector<string> Node 中
+ */
 void CSVParse::ParseString(void)
 {
     int sep_pos;
     int start_find_pos = 0;
     int end_pos = content.length() - 1;
-
     sep_pos = content.find(separate,start_find_pos);
     do
     {
@@ -69,7 +93,10 @@ void CSVParse::PrintNode(void)
     for(iter = Node.cbegin(); iter != Node.cend(); iter++,number++)
         cout<<"Node["<<number<<"]"<<*iter<<endl;
 }
-
+/* 
+ *  FillNodeForComma: 根据切分后的Node，每一个Node对应一行信息
+ *  将每个Node,建立一个CSVParseComma对象，并调用ParseString，进一步切分
+ * */
 void CSVParseLine::FillNodeForComma(void)
 {
     vector<string>::const_iterator iter;
@@ -81,42 +108,10 @@ void CSVParseLine::FillNodeForComma(void)
         NodeComma.push_back(*CommaNode);
     }
 }
-
-void CSVParseLine::GroupNodeLine(void)
-{
-   vector<CSVParseComma>::iterator iter;
-   vector<string> LogMessage;
-   iter = NodeComma.begin();
-   string YearMonth = (*iter).YearNode;
-   for( ; iter != NodeComma.end() ; iter++)
-   {
-      
-       if(NodeMap.count((*iter).YearNode) == 0)
-       {
-          LogMessage.clear();
-          LogMessage.push_back((*iter).content);
-          NodeMap.insert(make_pair((*iter).YearNode,LogMessage));   
-       }
-       else
-       {
-           NodeMap[(*iter).YearNode].push_back((*iter).content);
-       }
-   }
-}
-
-void CSVParseLine::ShowNodeMap(void)
-{
-    map<string,vector<string>>::iterator iter;
-    vector<string>::iterator v_iter;
-    for(iter = NodeMap.begin(); iter != NodeMap.end(); iter++ )
-    {
-        cout<< iter->first<<":"<<endl;
-        for(v_iter =(iter->second).begin(); v_iter != (iter->second).end(); v_iter++)
-            cout <<"  "<< *v_iter << endl;
-    }
-
-}
-
+/* 
+ *
+ *
+ * */
 void CSVParseLine::PrintAllLine(void)
 {
    vector<CSVParseComma>::iterator iter;
@@ -127,7 +122,10 @@ void CSVParseLine::PrintAllLine(void)
        (*iter).PrintAllNodeInfo(); 
    }
 }
-
+/* *
+ * 将每行的信息根据separate（“，”）切分，切分后以infoNode存储
+ *
+ * */
 void CSVParseComma::FillNodeForNodeInfo(void)
 {
     vector<string>::const_iterator iter;
@@ -155,7 +153,11 @@ void CSVParseComma::FillNodeForNodeInfo(void)
     if(iter == Node.cend())
         infoNode.push_back(ninfo);
 }
-
+/* *
+ *  打印出NodeInfo这个vector中的每个信息，
+ *  以date time module...等分类显示
+ *
+ * */
 void CSVParseComma::PrintAllNodeInfo(void)
 {
     vector<NodeInfo>::const_iterator iter;
@@ -168,5 +170,4 @@ void CSVParseComma::PrintAllNodeInfo(void)
         cout << "Level:" << (*iter).Level << endl;
         cout << "Message:" << (*iter).Message << endl;
     }
-
 }
